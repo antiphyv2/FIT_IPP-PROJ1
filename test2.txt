@@ -9,3 +9,4 @@ CALL int
 DEFVAR GF@a
 READ GF@a int
 WRITE GF@a
+NOT GF@b int@1

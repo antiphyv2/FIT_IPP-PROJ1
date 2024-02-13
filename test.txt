@@ -1,0 +1,9 @@
+.IPPcode24
+#caw
+DEfVAR      LF@cafa                
+#zdar
+
+    READ GF@a string@aaa
+MOVE GF@a GF@c #cuus
+    #Ahoj cau zdar
+MOVE GF@S

@@ -101,21 +101,22 @@ def main_func():
 
     for line in sys.stdin:
         input_exists = True
-        if op_order == 0:
-                header_valid = header_check(line)
-                if not header_valid:
-                    raise Header_exception("Chybejici hlavicka.")
-                else:
-                    header = xml_output.createElement('program')
-                    header.setAttribute('language', 'IPPcode24') 
-                    xml_output.appendChild(header)
-                    op_order += 1
-                    continue
 
         line, Is_Comment = Remove_comments(line)
         #Skip empty line or comment line
         if(Is_Comment):
             continue
+
+        if op_order == 0:
+            header_valid = header_check(line)
+            if not header_valid:
+                raise Header_exception("Spatny format nebo chybejici hlavicka.")
+            else:
+                header = xml_output.createElement('program')
+                header.setAttribute('language', 'IPPcode24') 
+                xml_output.appendChild(header)
+                op_order += 1
+                continue
         
         #Delete empty strings after splitting by whitespace
         line = line.split(" ")

@@ -1,6 +1,6 @@
-.IPPcode24
+.IPPcode242
 #caw
-DEfVAR      LF@cafa                
+DEfVAR      LF@1             
 #zdar
 
     READ GF@a string@aaa

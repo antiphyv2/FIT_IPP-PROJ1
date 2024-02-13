@@ -36,6 +36,7 @@ def add_xml_instruction(line, op_order, xml_output, header):
 def add_xml_argument(line, arg_number, xml_output, instruction):
     arg_w_number = f'arg{arg_number}'
     arg = xml_output.createElement(arg_w_number)
+    arg.setAttribute('type', 'TEST')
     arg_text = xml_output.createTextNode(line)
     arg.appendChild(arg_text)
     instruction.appendChild(arg)

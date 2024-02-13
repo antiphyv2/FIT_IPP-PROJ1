@@ -40,30 +40,30 @@ def add_xml_argument(line, arg_number, xml_output, instruction):
     arg.appendChild(arg_text)
     instruction.appendChild(arg)
 
-def validate_regex(regex, argument, xml_output, to_add_args):
+def validate_regex(regex, argument, xml_output, to_add_args, arg_number, inst):
     correct = re.match(regex, argument)
     if correct:
-        add_xml_argument(argument, 1, xml_output, to_add_args)
+        add_xml_argument(argument, arg_number, xml_output, to_add_args)
     else:
-        raise Other_exception("Nespravna syntaxe argumentu 1.")   
+        raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
 
 def handle_one_arg(inst, to_add_args, argument, xml_output):
-
+    
     list_one_arg_var = ['DEFVAR', 'POPS']
     list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
     list_one_arg_symb = ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']
 
     if inst.show_opcode() in list_one_arg_var:
-        regex = "(GF|LF|TF)@[A-Za-z_]+"
-        validate_regex(regex, argument, xml_output, to_add_args)
+        regex = "(GF|LF|TF)@[A-Za-z_]+$"
+        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
         
     elif inst.show_opcode() in list_one_arg_label:
-        regex = "[A-Za-z_]+"
-        validate_regex(regex, argument, xml_output, to_add_args)  
+        regex = "[A-Za-z_]+$"
+        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
-        regex = regex = "(bool@(true|false)|int@[0-9]+|nil@nil)"
-        validate_regex(regex, argument, xml_output, to_add_args)
+        regex = "(bool@(true|false)$|int@[0-9]+$|nil@nil)$"
+        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
     
 
 

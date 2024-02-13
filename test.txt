@@ -1,7 +1,7 @@
 .IPPcode24
 #caw
-DEfVAR      LF@_aew_?    
-Label maminka        
+DEfVAR      LF@_aew_    
+Label maminka
 #zdar
 
     READ GF@a string@aaa

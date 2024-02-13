@@ -40,6 +40,32 @@ def add_xml_argument(line, arg_number, xml_output, instruction):
     arg.appendChild(arg_text)
     instruction.appendChild(arg)
 
+def validate_regex(regex, argument, xml_output, to_add_args):
+    correct = re.match(regex, argument)
+    if correct:
+        add_xml_argument(argument, 1, xml_output, to_add_args)
+    else:
+        raise Other_exception("Nespravna syntaxe argumentu 1.")   
+
+def handle_one_arg(inst, to_add_args, argument, xml_output):
+
+    list_one_arg_var = ['DEFVAR', 'POPS']
+    list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
+    list_one_arg_symb = ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']
+
+    if inst.show_opcode() in list_one_arg_var:
+        regex = "(GF|LF|TF)@[A-Za-z_]+"
+        validate_regex(regex, argument, xml_output, to_add_args)
+        
+    elif inst.show_opcode() in list_one_arg_label:
+        regex = "[A-Za-z_]+"
+        validate_regex(regex, argument, xml_output, to_add_args)  
+        
+    elif inst.show_opcode() in list_one_arg_symb:
+        regex = regex = "(bool@(true|false)|int@[0-9]+|nil@nil)"
+        validate_regex(regex, argument, xml_output, to_add_args)
+    
+
 
 
 class Arg_exception(Exception):
@@ -126,26 +152,40 @@ def main_func():
                 support_line.append(part)
         line = support_line
         num_of_args = len(line) - 1
+        line[0] = line[0].upper()
 
-        match line[0].upper():
-            case 'READ':
-                inst = Instruction(op_order, 'READ', 2)
-            case 'DEFVAR':
-                inst = Instruction(op_order, 'DEFVAR', 1)
-                to_add_args = add_xml_instruction(line[0].upper(), op_order, xml_output, header)
-
-                if num_of_args != inst.show_arg_count():
-                    raise Other_exception("DEFVAR ma pouze 1 operand.")
+        if line[0] in inst_list_no_arg:
+            inst = Instruction(op_order, line[0], 0)
+            add_xml_instruction(line[0].upper(), op_order, xml_output, header)
+                    
+            if num_of_args != inst.show_arg_count():
+                raise Other_exception(f'{inst.show_opcode()} nema zadne argumenty.')
             
-                op_pattern = "(GF|LF|TF)@[A-Za-z_]+"
-                correct = re.match(op_pattern, line[1])
-                if correct:
-                    add_xml_argument(line[1], num_of_args, xml_output, to_add_args)
-            case 'MOVE':
-                inst = Instruction(op_order, 'MOVE', 2)
-            case _:
-                raise Opcode_exception("Spatny format instrukce.")
+        elif line[0] in inst_list_one_arg:
+            inst = Instruction(op_order, line[0], 1)
+            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
 
+            if num_of_args != inst.show_arg_count():
+                raise Other_exception(f'{inst.show_opcode()} ma pouze 1 argument.')
+            
+            handle_one_arg(inst, to_add_args, line[1], xml_output)
+            
+        elif line[0] in inst_list_two_arg:    
+            inst = Instruction(op_order, line[0], 2)
+            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+
+            if num_of_args != inst.show_arg_count():
+                raise Other_exception(f'{inst.show_opcode()} ma 2 argumenty.')
+
+        elif line[0] in inst_list_three_arg:    
+            inst = Instruction(op_order, line[0], 3)
+            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+
+            if num_of_args != inst.show_arg_count():
+                raise Other_exception(f'{inst.show_opcode()} ma 3 argumenty.')
+
+        else:
+            raise Opcode_exception("Spatny format instrukce.")
 
         print("Op counter:", op_order, "Line:", line)
         print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
@@ -155,6 +195,11 @@ def main_func():
         raise Header_exception("Chybejici hlavicka")
     print(xml_output.toprettyxml(encoding="UTF-8").decode())
 
+
+inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
+inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
+inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE']
+inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'NOT', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
 
 
 

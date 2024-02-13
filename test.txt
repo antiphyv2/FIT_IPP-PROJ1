@@ -1,9 +1,15 @@
-.IPPcode242
+.IPPcode24
 #caw
-DEfVAR      LF@1             
+DEfVAR      LF@_aew_?    
+Label maminka        
 #zdar
 
     READ GF@a string@aaa
 MOVE GF@a GF@c #cuus
     #Ahoj cau zdar
-MOVE GF@S
+MOVE GF@S AW@a
+BREAK
+BREAK
+PUSHS nil@nil
+
+#cau

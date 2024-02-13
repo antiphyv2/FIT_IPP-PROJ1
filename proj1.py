@@ -51,7 +51,7 @@ def handle_one_arg(inst, to_add_args, argument, xml_output):
     
     list_one_arg_var = ['DEFVAR', 'POPS']
     list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
-    list_one_arg_symb = ['PUSHS', 'WRITE', 'EXIT', 'DPRINT']
+    list_one_arg_symb = ['PUSHS', 'EXIT', 'DPRINT']
 
     if inst.show_opcode() in list_one_arg_var:
         regex = "(GF|LF|TF)@[A-Za-z_]+$"
@@ -62,7 +62,11 @@ def handle_one_arg(inst, to_add_args, argument, xml_output):
         validate_regex(regex, argument, xml_output, to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
-        regex = "(bool@(true|false)$|int@[0-9]+$|nil@nil)$"
+        regex = "(bool@(true|false)$|int@-?[0-9]+$|nil@nil$)"
+        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
+    #Opcode is write   
+    else:
+        regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?[0-9]+$|nil@nil$)"
         validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
     
 
@@ -185,7 +189,7 @@ def main_func():
                 raise Other_exception(f'{inst.show_opcode()} ma 3 argumenty.')
 
         else:
-            raise Opcode_exception("Spatny format instrukce.")
+            raise Opcode_exception("Spatny format nebo neexistujici instrukce.")
 
         print("Op counter:", op_order, "Line:", line)
         print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())

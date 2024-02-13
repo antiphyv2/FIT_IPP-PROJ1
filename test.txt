@@ -10,6 +10,7 @@ MOVE GF@a GF@c #cuus
 MOVE GF@S AW@a
 BREAK
 BREAK
-PUSHS nil@nil
+PUSHS int@-5
+PUSHS nil@nil1
 
 #cau

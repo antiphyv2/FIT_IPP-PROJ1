@@ -40,14 +40,14 @@ def add_xml_argument(line, arg_number, xml_output, instruction):
     arg.appendChild(arg_text)
     instruction.appendChild(arg)
 
-def validate_regex(regex, argument, xml_output, to_add_args, arg_number, inst):
+def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, inst):
     correct = re.match(regex, argument)
     if correct:
-        add_xml_argument(argument, arg_number, xml_output, to_add_args)
+        add_xml_argument(argument, arg_number, xml_output, inst_to_add_args)
     else:
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
 
-def handle_one_arg(inst, to_add_args, argument, xml_output):
+def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     
     list_one_arg_var = ['DEFVAR', 'POPS']
     list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
@@ -55,20 +55,32 @@ def handle_one_arg(inst, to_add_args, argument, xml_output):
 
     if inst.show_opcode() in list_one_arg_var:
         regex = "(GF|LF|TF)@[A-Za-z_]+$"
-        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
+        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
         
     elif inst.show_opcode() in list_one_arg_label:
         regex = "[A-Za-z_]+$"
-        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)  
+        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
         regex = "(bool@(true|false)$|int@-?[0-9]+$|nil@nil$)"
-        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
+        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     #Opcode is write   
     else:
         regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?[0-9]+$|nil@nil$)"
-        validate_regex(regex, argument, xml_output, to_add_args, 1, inst)
+        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     
+def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
+    var_symb = ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE']
+    arg1_regex = "(GF|LF|TF)@[A-Za-z_]+$"
+    if inst.show_opcode() in var_symb:
+        arg2_regex = "(bool@(true|false)$|int@-?[0-9]+$|nil@nil$)"
+        validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
+    else:
+        arg2_regex = "int$|bool$|string$"
+        validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
+    #Opcode is Read <var,type>
 
 
 
@@ -92,7 +104,6 @@ class Other_exception(Exception):
     def __init__(self, err_message):
         self.err_message = err_message
     
-
 
 class Instruction:
 
@@ -127,12 +138,12 @@ def main_func():
             sys.exit(RETURN_OK)
         else:
             raise Arg_exception("Spatna kombinace argumentu.")
-            #sys.exit(RETURN_ARG_ERR)
 
     for line in sys.stdin:
         input_exists = True
 
         line, Is_Comment = Remove_comments(line)
+
         #Skip empty line or comment line
         if(Is_Comment):
             continue
@@ -167,23 +178,25 @@ def main_func():
             
         elif line[0] in inst_list_one_arg:
             inst = Instruction(op_order, line[0], 1)
-            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
 
             if num_of_args != inst.show_arg_count():
                 raise Other_exception(f'{inst.show_opcode()} ma pouze 1 argument.')
             
-            handle_one_arg(inst, to_add_args, line[1], xml_output)
+            handle_one_arg(inst, inst_to_add_args, line[1], xml_output)
             
         elif line[0] in inst_list_two_arg:    
             inst = Instruction(op_order, line[0], 2)
-            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
 
             if num_of_args != inst.show_arg_count():
                 raise Other_exception(f'{inst.show_opcode()} ma 2 argumenty.')
+            
+            handle_two_arg(inst, inst_to_add_args, line[1], line[2], xml_output)
 
         elif line[0] in inst_list_three_arg:    
             inst = Instruction(op_order, line[0], 3)
-            to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
 
             if num_of_args != inst.show_arg_count():
                 raise Other_exception(f'{inst.show_opcode()} ma 3 argumenty.')
@@ -199,14 +212,10 @@ def main_func():
         raise Header_exception("Chybejici hlavicka")
     print(xml_output.toprettyxml(encoding="UTF-8").decode())
 
-
 inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
 inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'NOT', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
-
-
-
 
 if __name__ == "__main__":
     try:

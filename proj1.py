@@ -63,18 +63,18 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
-        regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$)"
+        regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     #Opcode is write   
     else:
-        regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$)"
+        regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     
 def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     var_symb = ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
     arg1_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
     if inst.show_opcode() in var_symb:
-        arg2_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$)"
+        arg2_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
         validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     #Opcode is Read <var,type>
@@ -85,7 +85,7 @@ def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     
 def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xml_output):
     var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-    symb_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$)"
+    symb_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
     validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
     validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     validate_regex(symb_regex, argument3, xml_output, inst_to_add_args, 3, inst)

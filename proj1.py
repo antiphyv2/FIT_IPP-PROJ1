@@ -44,7 +44,7 @@ def add_xml_argument(line, arg_number, xml_output, instruction, arg_type):
 def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, inst):
     correct = re.match(regex, argument)
     if correct:
-        line = correct.group(0).split('@')
+        line = correct.group(0).split('@', 1)
         #print("\n",line, len(line), line[0],"\n")
         #arg_type = 'TYPE'
         arg_type = None
@@ -78,7 +78,7 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     
     list_one_arg_var = ['DEFVAR', 'POPS']
     list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
-    list_one_arg_symb = ['EXIT', 'DPRINT', 'WRITE']
+    list_one_arg_symb = ['EXIT', 'DPRINT', 'WRITE', 'PUSHS']
 
     if inst.show_opcode() in list_one_arg_var:
         regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"

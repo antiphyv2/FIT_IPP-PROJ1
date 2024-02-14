@@ -16,7 +16,7 @@
 		<arg3 type="string">aaa</arg3>
 	</instruction>
 	<instruction order="5" opcode="WRITE">
-		<arg1 type="string">Proměnná\032GF</arg1>
+		<arg1 type="string">Proměnná\032GF@counter\032obsahuje\032</arg1>
 	</instruction>
 	<instruction order="6" opcode="WRITE">
 		<arg1 type="var">GF@counter</arg1>

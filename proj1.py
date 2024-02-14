@@ -33,10 +33,25 @@ def add_xml_instruction(line, op_order, xml_output, header):
     header.appendChild(instruction)
     return instruction
 
-def add_xml_argument(line, arg_number, xml_output, instruction):
+def add_xml_argument(line, arg_number, xml_output, instruction, arg_type):
+    #print("ARGTYPE:", arg_type, "TYPE")
+    var_array = ['GF', 'LF', 'TF']
+    
+    if arg_type in var_array:
+        arg_type = 'var'
+    elif arg_type == 'bool':
+        arg_type == 'bool'
+    elif arg_type == 'int':
+        arg_type == 'int'
+    elif arg_type == 'string':
+        arg_type == 'string'
+    elif arg_type == 'nil':
+        arg_type == 'nil'
+    else:
+        pass
     arg_w_number = f'arg{arg_number}'
     arg = xml_output.createElement(arg_w_number)
-    arg.setAttribute('type', 'TEST')
+    arg.setAttribute('type', arg_type)
     arg_text = xml_output.createTextNode(line)
     arg.appendChild(arg_text)
     instruction.appendChild(arg)
@@ -44,7 +59,17 @@ def add_xml_argument(line, arg_number, xml_output, instruction):
 def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, inst):
     correct = re.match(regex, argument)
     if correct:
-        add_xml_argument(argument, arg_number, xml_output, inst_to_add_args)
+        #print(argument)
+        arg_type = re.match(f'([^@]+)@', argument)
+        if arg_type and inst.show_opcode() != 'READ':
+            arg_type = arg_type.group(1)
+        else:
+            arg_type = re.match(f'int|string|bool', argument)
+            if arg_type:
+                arg_type = "type"
+            else:
+                arg_type = "label"
+        add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
 
@@ -89,7 +114,6 @@ def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xm
     validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
     validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     validate_regex(symb_regex, argument3, xml_output, inst_to_add_args, 3, inst)
-
 
 
 class Arg_exception(Exception):

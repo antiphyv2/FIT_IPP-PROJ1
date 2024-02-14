@@ -1,0 +1,15 @@
+Op counter: 1 Line: ['DEFVAR', 'GF@a']
+DEFVAR 1 1
+Op counter: 2 Line: ['READ', 'GF@a', 'int']
+READ 2 2
+<?xml version="1.0" encoding="UTF-8"?>
+<program language="IPPcode24">
+	<instruction order="1" opcode="DEFVAR">
+		<arg1 type="var">GF@a</arg1>
+	</instruction>
+	<instruction order="2" opcode="READ">
+		<arg1 type="label">GF@a</arg1>
+		<arg2 type="type">int</arg2>
+	</instruction>
+</program>
+

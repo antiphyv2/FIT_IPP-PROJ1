@@ -59,16 +59,9 @@ def add_xml_argument(line, arg_number, xml_output, instruction, arg_type):
 def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, inst):
     correct = re.match(regex, argument)
     if correct:
-        #print(argument)
-        arg_type = re.match(f'([^@]+)@', argument)
-        if arg_type and inst.show_opcode() != 'READ':
-            arg_type = arg_type.group(1)
-        else:
-            arg_type = re.match(f'int|string|bool', argument)
-            if arg_type:
-                arg_type = "type"
-            else:
-                arg_type = "label"
+        line = correct.group(0).split('@')
+        print("\n",line,"\n")
+        arg_type = 'TYPE'
         add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
@@ -88,18 +81,18 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
-        regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
+        regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     #Opcode is write   
     else:
-        regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
+        regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
     
 def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     var_symb = ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
     arg1_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
     if inst.show_opcode() in var_symb:
-        arg2_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
+        arg2_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
         validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     #Opcode is Read <var,type>
@@ -110,7 +103,7 @@ def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     
 def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xml_output):
     var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-    symb_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
+    symb_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
     validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
     validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     validate_regex(symb_regex, argument3, xml_output, inst_to_add_args, 3, inst)
@@ -250,6 +243,8 @@ inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
 inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
+
+regex_backup = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
 
 if __name__ == "__main__":
     try:

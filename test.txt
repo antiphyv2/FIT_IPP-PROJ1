@@ -10,10 +10,10 @@ MOVE GF@a int@0o777 #cuus
 MOVE GF@S bool@true
 BREAK
 BREAK
-PUSHS int@-5
+PUSHS int@0
 PUSHS nil@nil
 ADD GF@a int@5 string@abchydwub28y3a<>
-WRITE string@Proměnná\032GF@counter\032obsahuje\032
+WRITE string@Proměnná\032GF@counter\032#obsahuje\032
 WRITE string@\032<not-tag/>\032
 
 #cau

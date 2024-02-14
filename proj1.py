@@ -83,9 +83,14 @@ def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
         validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     
-def handle_three_arg():
-    arg1_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
+def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xml_output):
+    var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
     symb_regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$)"
+    validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+    validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
+    validate_regex(symb_regex, argument3, xml_output, inst_to_add_args, 3, inst)
+
+
 
 class Arg_exception(Exception):
     err_code = RETURN_ARG_ERR
@@ -203,6 +208,8 @@ def main_func():
 
             if num_of_args != inst.show_arg_count():
                 raise Other_exception(f'{inst.show_opcode()} ma 3 argumenty.')
+            
+            handle_three_arg(inst, inst_to_add_args, line[1], line[2], line[3], xml_output)
 
         else:
             raise Opcode_exception("Spatny format nebo neexistujici instrukce.")

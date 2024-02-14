@@ -12,5 +12,6 @@ BREAK
 BREAK
 PUSHS int@-5
 PUSHS nil@nil
+ADD GF@a int@5 int@3
 
 #cau

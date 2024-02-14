@@ -1,123 +1,13 @@
-
- ['LF', 'a2ew_?'] 2 LF 
-
-here
-Op counter: 1 Line: ['DEFVAR', 'LF@a2ew_?']
-DEFVAR 1 1
-
- ['maminka'] 1 maminka 
-
-Op counter: 2 Line: ['LABEL', 'maminka']
-LABEL 2 1
-
- ['GF', 'a'] 2 GF 
-
-here
-
- ['int'] 1 int 
-
-Op counter: 3 Line: ['READ', 'GF@a', 'int']
-READ 3 2
-
- ['GF', 'a'] 2 GF 
-
-here
-
- ['int', '0o777'] 2 int 
-
-here
-Op counter: 4 Line: ['MOVE', 'GF@a', 'int@0o777']
-MOVE 4 2
-
- ['GF', 'S'] 2 GF 
-
-here
-
- ['bool', 'true'] 2 bool 
-
-here
-Op counter: 5 Line: ['MOVE', 'GF@S', 'bool@true']
-MOVE 5 2
-Op counter: 6 Line: ['BREAK']
-BREAK 6 0
-Op counter: 7 Line: ['BREAK']
-BREAK 7 0
-
- ['int', '0'] 2 int 
-
-here
-Op counter: 8 Line: ['PUSHS', 'int@0']
-PUSHS 8 1
-
- ['nil', 'nil'] 2 nil 
-
-here
-Op counter: 9 Line: ['PUSHS', 'nil@nil']
-PUSHS 9 1
-
- ['GF', 'a'] 2 GF 
-
-here
-
- ['int', '5'] 2 int 
-
-here
-
- ['string', 'abchydwub28y3a<>'] 2 string 
-
-here
-Op counter: 10 Line: ['ADD', 'GF@a', 'int@5', 'string@abchydwub28y3a<>']
-ADD 10 3
-
- ['string', 'Proměnná\\032GF', 'counter\\032'] 3 string 
-
-here
-Op counter: 11 Line: ['WRITE', 'string@Proměnná\\032GF@counter\\032']
-WRITE 11 1
-
- ['string', '\\032<not-tag/>\\032'] 2 string 
-
-here
-Op counter: 12 Line: ['WRITE', 'string@\\032<not-tag/>\\032']
-WRITE 12 1
 <?xml version="1.0" encoding="UTF-8"?>
 <program language="IPPcode24">
 	<instruction order="1" opcode="DEFVAR">
-		<arg1 type="var">LF@a2ew_?</arg1>
-	</instruction>
-	<instruction order="2" opcode="LABEL">
-		<arg1 type="label">maminka</arg1>
-	</instruction>
-	<instruction order="3" opcode="READ">
 		<arg1 type="var">GF@a</arg1>
-		<arg2 type="type">int</arg2>
 	</instruction>
-	<instruction order="4" opcode="MOVE">
+	<instruction order="2" opcode="PUSHS">
 		<arg1 type="var">GF@a</arg1>
-		<arg2 type="int">0o777</arg2>
 	</instruction>
-	<instruction order="5" opcode="MOVE">
-		<arg1 type="var">GF@S</arg1>
-		<arg2 type="bool">true</arg2>
-	</instruction>
-	<instruction order="6" opcode="BREAK"/>
-	<instruction order="7" opcode="BREAK"/>
-	<instruction order="8" opcode="PUSHS">
-		<arg1 type="int">0</arg1>
-	</instruction>
-	<instruction order="9" opcode="PUSHS">
-		<arg1 type="nil">nil</arg1>
-	</instruction>
-	<instruction order="10" opcode="ADD">
+	<instruction order="3" opcode="PUSHS">
 		<arg1 type="var">GF@a</arg1>
-		<arg2 type="int">5</arg2>
-		<arg3 type="string">abchydwub28y3a&lt;&gt;</arg3>
-	</instruction>
-	<instruction order="11" opcode="WRITE">
-		<arg1 type="string">Proměnná\032GF</arg1>
-	</instruction>
-	<instruction order="12" opcode="WRITE">
-		<arg1 type="string">\032&lt;not-tag/&gt;\032</arg1>
 	</instruction>
 </program>
 

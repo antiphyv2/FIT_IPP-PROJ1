@@ -1,13 +1,10 @@
-.IPPcode24
+# No header in first line
+.IPPcode24 # Comment
+# ggg
+### ggg
 
-LABEL int
-RETURN
-LABEL bool
-JUMP string
-LABEL string
-CALL int
-DEFVAR GF@a
-READ GF@a int
-WRITE GF@a
-NOT GF@b int@1
-PUSHS int@0x7fffffff
+DEFVAR GF@a # Comment
+PUSHS GF@a # Comment # Comment # Comment
+PUSHS GF@a ##### Comment
+
+# PUSHS GF@a

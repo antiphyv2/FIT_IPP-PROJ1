@@ -45,7 +45,7 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
     correct = re.match(regex, argument)
     if correct:
         line = correct.group(0).split('@')
-        print("\n",line, len(line), line[0],"\n")
+        #print("\n",line, len(line), line[0],"\n")
         #arg_type = 'TYPE'
         arg_type = None
         var_array = ['GF', 'LF', 'TF']
@@ -55,7 +55,7 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
             else:
                 arg_type = 'label'
         else:
-            print("here")
+            #print("here")
             if line[0] in var_array:
                 arg_type = 'var'
             elif line[0] == 'bool':
@@ -78,7 +78,7 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     
     list_one_arg_var = ['DEFVAR', 'POPS']
     list_one_arg_label = ['CALL', 'LABEL', 'JUMP']
-    list_one_arg_symb = ['PUSHS', 'EXIT', 'DPRINT']
+    list_one_arg_symb = ['EXIT', 'DPRINT']
 
     if inst.show_opcode() in list_one_arg_var:
         regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
@@ -91,7 +91,7 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     elif inst.show_opcode() in list_one_arg_symb:
         regex = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
-    #Opcode is write   
+    #Opcode is write or pushs
     else:
         regex = "(GF|LF|TF)@[A-Za-z_]+$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
         validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
@@ -239,8 +239,8 @@ def main_func():
         else:
             raise Opcode_exception("Spatny format nebo neexistujici instrukce.")
 
-        print("Op counter:", op_order, "Line:", line)
-        print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
+        #print("Op counter:", op_order, "Line:", line)
+        #print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
         op_order += 1
 
     if not input_exists:

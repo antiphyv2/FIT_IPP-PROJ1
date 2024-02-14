@@ -1,16 +1,16 @@
 .IPPcode24
 #caw
-DEfVAR      LF@_aew_    
+DEfVAR      LF@a2ew_?    
 Label maminka
 #zdar
 
-    READ GF@a string@aaa
-MOVE GF@a GF@c #cuus
+    READ GF@a int #string@aaa
+MOVE GF@a int@0o777 #cuus
     #Ahoj cau zdar
-MOVE GF@S AW@a
+MOVE GF@S bool@true
 BREAK
 BREAK
 PUSHS int@-5
-PUSHS nil@nil1
+PUSHS nil@nil
 
 #cau

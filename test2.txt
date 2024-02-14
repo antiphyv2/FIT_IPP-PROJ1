@@ -10,3 +10,4 @@ DEFVAR GF@a
 READ GF@a int
 WRITE GF@a
 NOT GF@b int@1
+PUSHS int@0x7fffffff

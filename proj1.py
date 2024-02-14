@@ -45,8 +45,6 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
     correct = re.match(regex, argument)
     if correct:
         line = correct.group(0).split('@', 1)
-        #print("\n",line, len(line), line[0],"\n")
-        #arg_type = 'TYPE'
         arg_type = None
         var_array = ['GF', 'LF', 'TF']
         if len(line) == 1:
@@ -55,7 +53,6 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
             else:
                 arg_type = 'label'
         else:
-            #print("here")
             if line[0] in var_array:
                 arg_type = 'var'
             elif line[0] == 'bool':
@@ -140,7 +137,6 @@ class Other_exception(Exception):
     def __init__(self, err_message):
         self.err_message = err_message
     
-
 class Instruction:
 
     def __init__(self, order, opcode, arg_count):

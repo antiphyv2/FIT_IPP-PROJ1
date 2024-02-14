@@ -34,21 +34,6 @@ def add_xml_instruction(line, op_order, xml_output, header):
     return instruction
 
 def add_xml_argument(line, arg_number, xml_output, instruction, arg_type):
-    #print("ARGTYPE:", arg_type, "TYPE")
-    var_array = ['GF', 'LF', 'TF']
-    
-    if arg_type in var_array:
-        arg_type = 'var'
-    elif arg_type == 'bool':
-        arg_type == 'bool'
-    elif arg_type == 'int':
-        arg_type == 'int'
-    elif arg_type == 'string':
-        arg_type == 'string'
-    elif arg_type == 'nil':
-        arg_type == 'nil'
-    else:
-        pass
     arg_w_number = f'arg{arg_number}'
     arg = xml_output.createElement(arg_w_number)
     arg.setAttribute('type', arg_type)
@@ -60,8 +45,31 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
     correct = re.match(regex, argument)
     if correct:
         line = correct.group(0).split('@')
-        print("\n",line,"\n")
-        arg_type = 'TYPE'
+        print("\n",line, len(line), line[0],"\n")
+        #arg_type = 'TYPE'
+        arg_type = None
+        var_array = ['GF', 'LF', 'TF']
+        if len(line) == 1:
+            if inst.show_opcode() == 'READ':
+                arg_type = 'type'
+            else:
+                arg_type = 'label'
+        else:
+            print("here")
+            if line[0] in var_array:
+                arg_type = 'var'
+            elif line[0] == 'bool':
+                argument = line[1]
+                arg_type = 'bool'
+            elif line[0] == 'int':
+                argument = line[1]
+                arg_type = 'int'
+            elif line[0] == 'string':  
+                argument = line[1]
+                arg_type = 'string'
+            else:
+                argument = line[1]
+                arg_type = 'nil'
         add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   

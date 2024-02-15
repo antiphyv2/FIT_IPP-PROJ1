@@ -1,2 +1,2 @@
 .IPPcode24
-TEST. string@cau
+TEST string@cau

@@ -235,9 +235,9 @@ def main_func():
         else:
             op_code_id_match = re.match(opcode_regex, line[0])
             if op_code_id_match:
-                raise Opcode_exception('Spatny format nebo neexistujici instrukce.')
+                raise Opcode_exception(f'Syntakticka chyba v instrukci {line[0]} nebo nepodporovana instrukce.')
             else:
-                raise Other_exception('Chyba, syntakticky spatne zapsana instrukce.')
+                raise Other_exception(f'Slovo {line[0]} neni instrukce.')
 
         #print('Op counter:', op_order, 'Line:', line)
         #print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())

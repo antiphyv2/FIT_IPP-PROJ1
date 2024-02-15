@@ -62,8 +62,13 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
                 argument = line[1]
                 arg_type = 'int'
             elif line[0] == 'string':  
-                argument = line[1]
-                arg_type = 'string'
+                matches = re.findall(string_regex, line[1])
+                backslash_count = line[1].count('\\')
+                if len(matches) == backslash_count:
+                    argument = line[1]
+                    arg_type = 'string'
+                else:
+                    raise Other_exception(f'Nespravny format escape sekvence v retezci {line[1]} u instrukce {inst.show_opcode()}.')   
             else:
                 argument = line[1]
                 arg_type = 'nil'
@@ -245,6 +250,7 @@ inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR
 var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
 label_regex = "[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
 symb_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
+string_regex = "([^\\\\]|^)(\\\\{1}[0-9]{3})(?![0-9])"
 
 if __name__ == "__main__":
     try:

@@ -1,2 +1,5 @@
 .IPPcode24
-WRITE string@ahoj svete
+
+DEFVAR GF@a
+PUSHS int@3
+WRITE string@a\1314He\126llo\111w091howareyou

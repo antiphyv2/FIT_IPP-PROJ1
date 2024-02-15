@@ -45,7 +45,7 @@ import re
 
 
 # Define your string
-my_string = r'a\134He\126llo\111w091howareyou'
+my_string = r'\111He\126llo\111w091howareyou'
 print(my_string)
 modified_string = my_string.replace("\\", "\\\\")
 print(modified_string)
@@ -64,7 +64,7 @@ print(modified_string)
 #     print("There is a backslash in the string that is not followed by exactly three numbers.")
 
 # Define a regular expression pattern
-pattern = "([^\\\\]|^)(\\\\{1}[0-9]{3})(?![0-9])"
+pattern = "((\\\\{1}[0-9]{3})(?![0-9]))"
 
 # Find all matches of the pattern in the string
 matches = re.findall(pattern, my_string)

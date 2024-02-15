@@ -21,7 +21,7 @@ def print_help():
 
 def header_check(line):
     line = line.rstrip(" \n")
-    if(line != ".IPPcode24"):
+    if line != ".IPPcode24":
         return False
     else:
         return True
@@ -250,8 +250,6 @@ inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
 inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
-
-regex_backup = "(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[1-9][0-9]*|0)$|nil@nil$|string@(?:[^\\\x00-\x1F]|\\[0-9]{3})+$)"
 
 if __name__ == "__main__":
     try:

@@ -4,4 +4,5 @@
 .IPPcode24
 LABEL begin
 DEFVAR GF@x
-WRITE begin  # neočekávaný token
+WRITE GF@qe  # neočekávaný token
+JUMPIFEQ GF@a

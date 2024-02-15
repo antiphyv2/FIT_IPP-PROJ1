@@ -74,6 +74,7 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
                 arg_type = 'nil'
         add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
+        
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
 
 def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
@@ -232,7 +233,11 @@ def main_func():
             handle_three_arg(inst, inst_to_add_args, line[1], line[2], line[3], xml_output)
 
         else:
-            raise Opcode_exception('Spatny format nebo neexistujici instrukce.')
+            op_code_id_match = re.match(opcode_regex, line[0])
+            if op_code_id_match:
+                raise Opcode_exception('Spatny format nebo neexistujici instrukce.')
+            else:
+                raise Other_exception('Chyba, syntakticky spatne zapsana instrukce.')
 
         #print('Op counter:', op_order, 'Line:', line)
         #print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
@@ -250,6 +255,7 @@ inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR
 var_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
 label_regex = '[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
 symb_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))'
+opcode_regex = '[a-zA-Z0-9]+$'
 string_regex = '((\\\\[0-9]{3})(?![0-9]))'
 
 if __name__ == '__main__':

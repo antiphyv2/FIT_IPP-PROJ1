@@ -1,5 +1,2 @@
 .IPPcode24
-
-DEFVAR GF@a
-PUSHS int@3
-WRITE string@a\314He\126llo\111w091howareyou
+TEST. string@cau

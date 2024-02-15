@@ -1,2 +1,4 @@
 .IPPcode24
-TEST string@cau
+
+DEFVAR GF@a
+PUSHFRAME GF@a

@@ -111,6 +111,13 @@ def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xm
     validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     validate_regex(symb_regex, argument3, xml_output, inst_to_add_args, 3, inst)
 
+def instruction_process(op_order, line, num_of_args, xml_output, header, num_of_inst_args):
+    inst = Instruction(op_order, line, num_of_inst_args)
+    inst_to_add_args = add_xml_instruction(line, op_order, xml_output, header)
+
+    if num_of_args != inst.show_arg_count():
+        raise Other_exception(f'{inst.show_opcode()} ma nespravny pocet argumentu.')
+    return inst, inst_to_add_args
 
 class Arg_exception(Exception):
     err_code = RETURN_ARG_ERR
@@ -193,48 +200,33 @@ def main_func():
                 support_line.append(part)
         line = support_line
         num_of_args = len(line) - 1
-        line[0] = line[0].upper()
+        opcode = line[0].upper()
 
-        if line[0] in inst_list_no_arg:
-            inst = Instruction(op_order, line[0], 0)
-            add_xml_instruction(line[0], op_order, xml_output, header)
-                    
-            if num_of_args != inst.show_arg_count():
-                raise Other_exception(f'{inst.show_opcode()} nema zadne argumenty.')
+        if opcode in inst_list_no_arg:
+            num_of_inst_args = 0
+            inst_element = instruction_process(op_order, opcode, num_of_args, xml_output, header, num_of_inst_args)
             
-        elif line[0] in inst_list_one_arg:
-            inst = Instruction(op_order, line[0], 1)
-            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
+        elif opcode in inst_list_one_arg:
+            num_of_inst_args = 1
+            inst_element = instruction_process(op_order, opcode, num_of_args, xml_output, header, num_of_inst_args)
+            handle_one_arg(inst_element[0], inst_element[1], line[1], xml_output)
+            
+        elif opcode in inst_list_two_arg:    
+            num_of_inst_args = 2
+            inst_element = instruction_process(op_order, opcode, num_of_args, xml_output, header, num_of_inst_args)
+            handle_two_arg(inst_element[0], inst_element[1], line[1], line[2], xml_output)
 
-            if num_of_args != inst.show_arg_count():
-                raise Other_exception(f'{inst.show_opcode()} ma pouze 1 argument.')
-            
-            handle_one_arg(inst, inst_to_add_args, line[1], xml_output)
-            
-        elif line[0] in inst_list_two_arg:    
-            inst = Instruction(op_order, line[0], 2)
-            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
-
-            if num_of_args != inst.show_arg_count():
-                raise Other_exception(f'{inst.show_opcode()} ma 2 argumenty.')
-            
-            handle_two_arg(inst, inst_to_add_args, line[1], line[2], xml_output)
-
-        elif line[0] in inst_list_three_arg:    
-            inst = Instruction(op_order, line[0], 3)
-            inst_to_add_args = add_xml_instruction(line[0], op_order, xml_output, header)
-
-            if num_of_args != inst.show_arg_count():
-                raise Other_exception(f'{inst.show_opcode()} ma 3 argumenty.')
-            
-            handle_three_arg(inst, inst_to_add_args, line[1], line[2], line[3], xml_output)
+        elif opcode in inst_list_three_arg:    
+            num_of_inst_args = 3
+            inst_element = instruction_process(op_order, opcode, num_of_args, xml_output, header, num_of_inst_args)
+            handle_three_arg(inst_element[0], inst_element[1], line[1], line[2], line[3], xml_output)
 
         else:
-            op_code_id_match = re.match(opcode_regex, line[0])
+            op_code_id_match = re.match(opcode_regex, opcode)
             if op_code_id_match:
-                raise Opcode_exception(f'Syntakticka chyba v instrukci {line[0]} nebo nepodporovana instrukce.')
+                raise Opcode_exception(f'Syntakticka chyba v instrukci {opcode} nebo nepodporovana instrukce.')
             else:
-                raise Other_exception(f'Slovo {line[0]} neni instrukce.')
+                raise Other_exception(f'Slovo {opcode} neni instrukce.')
 
         op_order += 1
 

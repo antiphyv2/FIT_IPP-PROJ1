@@ -46,14 +46,13 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
     if correct:
         line = correct.group(0).split('@', 1)
         arg_type = None
-        var_array = ['GF', 'LF', 'TF']
         if len(line) == 1:
             if inst.show_opcode() == 'READ':
                 arg_type = 'type'
             else:
                 arg_type = 'label'
         else:
-            if line[0] in var_array:
+            if line[0] in ['GF', 'LF', 'TF']:
                 arg_type = 'var'
             elif line[0] == 'bool':
                 argument = line[1]
@@ -74,7 +73,6 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
                 arg_type = 'nil'
         add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
-        
         raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
 
 def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
@@ -96,13 +94,13 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     
 def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     var_symb = ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
+    validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+    
     if inst.show_opcode() in var_symb:
-        validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     #Opcode is Read <var,type>
     else:
         type_regex = 'int$|bool$|string$'
-        validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(type_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     
 def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xml_output):
@@ -170,7 +168,6 @@ def main_func():
 
     for line in sys.stdin:
         input_exists = True
-
         line, Is_Comment = Remove_comments(line)
 
         #Skip empty line or comment line
@@ -200,7 +197,7 @@ def main_func():
 
         if line[0] in inst_list_no_arg:
             inst = Instruction(op_order, line[0], 0)
-            add_xml_instruction(line[0].upper(), op_order, xml_output, header)
+            add_xml_instruction(line[0], op_order, xml_output, header)
                     
             if num_of_args != inst.show_arg_count():
                 raise Other_exception(f'{inst.show_opcode()} nema zadne argumenty.')
@@ -239,8 +236,6 @@ def main_func():
             else:
                 raise Other_exception(f'Slovo {line[0]} neni instrukce.')
 
-        #print('Op counter:', op_order, 'Line:', line)
-        #print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
         op_order += 1
 
     if not input_exists:

@@ -1,8 +1,2 @@
-
-# Ukazka kódu se syntaktickou chybou (skript parse.py musí detekovat)
-
 .IPPcode24
-LABEL begin
-DEFVAR GF@x
-WRITE GF@qe  # neočekávaný token
-JUMPIFEQ GF@a
+WRITE string@ahoj svete

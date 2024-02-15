@@ -78,37 +78,28 @@ def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     list_one_arg_symb = ['EXIT', 'DPRINT', 'WRITE', 'PUSHS']
 
     if inst.show_opcode() in list_one_arg_var:
-        regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(var_regex, argument, xml_output, inst_to_add_args, 1, inst)
         
     elif inst.show_opcode() in list_one_arg_label:
-        regex = "[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)  
+        validate_regex(label_regex, argument, xml_output, inst_to_add_args, 1, inst)  
         
     elif inst.show_opcode() in list_one_arg_symb:
-        regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
-        validate_regex(regex, argument, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(symb_regex, argument, xml_output, inst_to_add_args, 1, inst)
     else:
         pass
     
 def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
     var_symb = ['MOVE', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
-    arg1_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
     if inst.show_opcode() in var_symb:
-        arg2_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
-        validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
-        validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
+        validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     #Opcode is Read <var,type>
     else:
-        arg2_regex = "int$|bool$|string$"
-        validate_regex(arg1_regex, argument1, xml_output, inst_to_add_args, 1, inst)
-        validate_regex(arg2_regex, argument2, xml_output, inst_to_add_args, 2, inst)
+        type_regex = "int$|bool$|string$"
+        validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
+        validate_regex(type_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     
 def handle_three_arg(inst, inst_to_add_args, argument1, argument2, argument3, xml_output):
-    var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-    symb_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
-    label_regex = "[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-
     if inst.show_opcode() in ['JUMPIFEQ', 'JUMPIFNEQ']:
         validate_regex(label_regex, argument1, xml_output, inst_to_add_args, 1, inst)
     else:
@@ -250,6 +241,10 @@ inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
 inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
+
+var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
+label_regex = "[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
+symb_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
 
 if __name__ == "__main__":
     try:

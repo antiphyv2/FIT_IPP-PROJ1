@@ -46,6 +46,8 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
     if correct:
         line = correct.group(0).split('@', 1)
         arg_type = None
+
+        #There was no @ in argument
         if len(line) == 1:
             if inst.show_opcode() == 'READ':
                 arg_type = 'type'
@@ -60,7 +62,8 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
             elif line[0] == 'int':
                 argument = line[1]
                 arg_type = 'int'
-            elif line[0] == 'string':  
+            elif line[0] == 'string':
+                #Validate escape sequences  
                 esc_sqe_matches = re.findall(string_regex, line[1])
                 backslash_count = line[1].count('\\')
                 if len(esc_sqe_matches) == backslash_count:

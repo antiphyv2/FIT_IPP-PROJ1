@@ -9,19 +9,19 @@ RETURN_BAD_OPCODE = 22
 RETURN_ERROR_OTHER = 23
 
 def Remove_comments(line):
-    line = line.split("#")[0].rstrip("\n")
-    if line.isspace() or line == "":
+    line = line.split('#')[0].rstrip('\n')
+    if line.isspace() or line == '':
         return line, True
     else:
         return line, False
 
 def print_help():
-    print("Tento skript nacita ze standardniho vstupu zdrojovy kod v IPPcode24,")
-    print("zkontroluje spravnost kodu a vypise na standardni vystup XML reprezentaci programu.")
+    print('Tento skript nacita ze standardniho vstupu zdrojovy kod v IPPcode24,')
+    print('zkontroluje spravnost kodu a vypise na standardni vystup XML reprezentaci programu.')
 
 def header_check(line):
-    line = line.rstrip(" \n")
-    if line != ".IPPcode24":
+    line = line.rstrip(' \n')
+    if line != '.IPPcode24':
         return False
     else:
         return True
@@ -62,9 +62,9 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
                 argument = line[1]
                 arg_type = 'int'
             elif line[0] == 'string':  
-                matches = re.findall(string_regex, line[1])
+                backshlash_matches = re.findall(string_regex, line[1])
                 backslash_count = line[1].count('\\')
-                if len(matches) == backslash_count:
+                if len(backshlash_matches) == backslash_count:
                     argument = line[1]
                     arg_type = 'string'
                 else:
@@ -100,7 +100,7 @@ def handle_two_arg(inst, inst_to_add_args, argument1, argument2, xml_output):
         validate_regex(symb_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     #Opcode is Read <var,type>
     else:
-        type_regex = "int$|bool$|string$"
+        type_regex = 'int$|bool$|string$'
         validate_regex(var_regex, argument1, xml_output, inst_to_add_args, 1, inst)
         validate_regex(type_regex, argument2, xml_output, inst_to_add_args, 2, inst)
     
@@ -157,7 +157,7 @@ def main_func():
 
 
     if arg_count > 2:
-        print("Spatna kombinace argumentu")
+        print('Spatna kombinace argumentu')
         sys.exit(RETURN_ARG_ERR)
 
     if arg_count == 2:
@@ -165,7 +165,7 @@ def main_func():
             print_help()
             sys.exit(RETURN_OK)
         else:
-            raise Arg_exception("Spatna kombinace argumentu.")
+            raise Arg_exception('Spatna kombinace argumentu.')
 
     for line in sys.stdin:
         input_exists = True
@@ -179,7 +179,7 @@ def main_func():
         if op_order == 0:
             header_valid = header_check(line)
             if not header_valid:
-                raise Header_exception("Spatny format nebo chybejici hlavicka.")
+                raise Header_exception('Spatny format nebo chybejici hlavicka.')
             else:
                 header = xml_output.createElement('program')
                 header.setAttribute('language', 'IPPcode24') 
@@ -188,7 +188,7 @@ def main_func():
                 continue
         
         #Delete empty strings after splitting by whitespace
-        line = line.split(" ")
+        line = line.split(' ')
         support_line = []
         for part in line:
             if part.strip():
@@ -232,27 +232,27 @@ def main_func():
             handle_three_arg(inst, inst_to_add_args, line[1], line[2], line[3], xml_output)
 
         else:
-            raise Opcode_exception("Spatny format nebo neexistujici instrukce.")
+            raise Opcode_exception('Spatny format nebo neexistujici instrukce.')
 
-        #print("Op counter:", op_order, "Line:", line)
+        #print('Op counter:', op_order, 'Line:', line)
         #print(inst.show_opcode(), inst.show_order(), inst.show_arg_count())
         op_order += 1
 
     if not input_exists:
-        raise Header_exception("Chybejici hlavicka")
-    print(xml_output.toprettyxml(encoding="UTF-8").decode())
+        raise Header_exception('Chybejici hlavicka')
+    print(xml_output.toprettyxml(encoding='UTF-8').decode())
 
 inst_list_no_arg = ['CREATEFRAME', 'PUSHFRAME', 'POPFRAME', 'RETURN', 'BREAK']
 inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP', 'EXIT', 'DPRINT']
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
 
-var_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-label_regex = "[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$"
-symb_regex = "(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))"
-string_regex = "([^\\\\]|^)(\\\\{1}[0-9]{3})(?![0-9])"
+var_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
+label_regex = '[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
+symb_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))'
+string_regex = '([^\\\\]|^)(\\\\{1}[0-9]{3})(?![0-9])'
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     try:
         main_func()
     except Header_exception as he:

@@ -2,4 +2,4 @@
 
 DEFVAR GF@a
 PUSHS int@3
-WRITE string@a\1314He\126llo\111w091howareyou
+WRITE string@a\314He\126llo\111w091howareyou

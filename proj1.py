@@ -246,7 +246,7 @@ var_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
 label_regex = '[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
 symb_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))'
 opcode_regex = '[a-zA-Z0-9]+$'
-string_regex = '((\\\\[0-9]{3})(?![0-9]))'
+string_regex = '\\\\[0-9]{3}' #'((\\\\[0-9]{3})(?![0-9]))'
 
 if __name__ == '__main__':
     try:

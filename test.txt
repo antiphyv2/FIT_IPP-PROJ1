@@ -13,7 +13,7 @@ BREAK
 PUSHS int@0
 PUSHS nil@nil
 ADD GF@a int@5 string@abchydwub28y3a<>
-WRITE string@Proměnná\032GF@counter\032#obsahuje\032
+WRITE string@Proměnná\032GF@counter\03112#obsahuje\032
 WRITE string@\032<not-tag/>\032
 
 #cau

@@ -6,3 +6,4 @@ parse/wrong_header.src
 parse/test.sh
 parse/parse.py
 parse/Makefile
+test.txt

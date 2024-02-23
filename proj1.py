@@ -76,7 +76,7 @@ def validate_regex(regex, argument, xml_output, inst_to_add_args, arg_number, in
                 arg_type = 'nil'
         add_xml_argument(argument, arg_number, xml_output, inst_to_add_args, arg_type)
     else:
-        raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} u instrukce {inst.show_opcode()}.')   
+        raise Other_exception(f'Nespravna syntaxe argumentu {arg_number} {argument} u instrukce {inst.show_opcode()}.')   
 
 def handle_one_arg(inst, inst_to_add_args, argument, xml_output):
     

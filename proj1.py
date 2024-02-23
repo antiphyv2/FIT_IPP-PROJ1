@@ -20,7 +20,7 @@ def print_help():
     print('zkontroluje spravnost kodu a vypise na standardni vystup XML reprezentaci programu.')
 
 def header_check(line):
-    line = line.rstrip(' \n')
+    line = line.strip(' \n')
     if line != '.IPPcode24':
         return False
     else:
@@ -242,9 +242,9 @@ inst_list_one_arg = ['DEFVAR', 'CALL', 'PUSHS', 'POPS', 'WRITE', 'LABEL', 'JUMP'
 inst_list_two_arg = ['MOVE', 'READ', 'INT2CHAR', 'STRLEN', 'TYPE', 'NOT']
 inst_list_three_arg = ['ADD', 'SUB', 'MUL', 'IDIV', 'LT', 'GT', 'EQ', 'AND', 'OR', 'STRI2INT', 'CONCAT', 'GETCHAR', 'SETCHAR', 'JUMPIFEQ', 'JUMPIFNEQ']
 
-var_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
-label_regex = '[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$'
-symb_regex = '(GF|LF|TF)@[_a-zA-Z][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@-?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))'
+var_regex = '(GF|LF|TF)@[_a-zA-Z$&%*!?-][_a-zA-Z0-9$&%*!?-]*$'
+label_regex = '[_a-zA-Z$&%*!?-][_a-zA-Z0-9$&%*!?-]*$'
+symb_regex = '(GF|LF|TF)@[_a-zA-Z$&%*!?-][_a-zA-Z0-9$&%*!?-]*$|(bool@(true|false)$|int@[-+]?(0o[0-7]+|0x[0-9a-fA-F]+|[0-9]+)$|nil@nil$|string@(.*))'
 opcode_regex = '[a-zA-Z0-9]+$'
 string_regex = '\\\\[0-9]{3}' #'((\\\\[0-9]{3})(?![0-9]))'
 

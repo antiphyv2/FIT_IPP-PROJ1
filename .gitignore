@@ -7,3 +7,8 @@ parse/test.sh
 parse/parse.py
 parse/Makefile
 test.txt
+*.html
+tests/jexam/doc/package-list
+*.gif
+*.jar
+*.java

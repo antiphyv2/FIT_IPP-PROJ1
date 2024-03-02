@@ -8,7 +8,18 @@ RETURN_MISSING_HEADER = 21
 RETURN_BAD_OPCODE = 22
 RETURN_ERROR_OTHER = 23
 
-def Remove_comments(line):
+def process_cli_args():
+    arg_count = len(sys.argv)
+    if arg_count > 2:
+        raise Arg_exception('Spatna kombinace argumentu.')
+    elif arg_count == 2:
+        if sys.argv[1] == '--help':
+            print_help()
+            sys.exit(RETURN_OK)
+        else:
+            raise Arg_exception('Spatna kombinace argumentu.')
+        
+def remove_comments(line):
     line = line.split('#')[0].rstrip('\n')
     if line.isspace() or line == '':
         return line, True
@@ -21,7 +32,8 @@ def print_help():
 
 def header_check(line):
     line = line.strip(' \n')
-    if line != '.IPPcode24':
+    line = line.upper()
+    if line != '.IPPCODE24':
         return False
     else:
         return True
@@ -159,26 +171,19 @@ class Instruction:
         return self.arg_count
 
 def main_func():
-    arg_count = len(sys.argv)
     op_order = 0
     xml_output = minidom.Document()
     input_exists = False
 
-
-    if arg_count > 2:
-        print('Spatna kombinace argumentu')
-        sys.exit(RETURN_ARG_ERR)
-
-    if arg_count == 2:
-        if sys.argv[1] == '--help':
-            print_help()
-            sys.exit(RETURN_OK)
-        else:
-            raise Arg_exception('Spatna kombinace argumentu.')
-
+    try: 
+        process_cli_args()
+    except Arg_exception as ae:
+        print(ae.err_message, file=sys.stderr)
+        sys.exit(ae.err_code)
+            
     for line in sys.stdin:
         input_exists = True
-        line, Is_Comment = Remove_comments(line)
+        line, Is_Comment = remove_comments(line)
 
         #Skip empty line or comment line
         if(Is_Comment):

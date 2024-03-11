@@ -12,3 +12,5 @@ tests/jexam/doc/package-list
 *.gif
 *.jar
 *.java
+alltest
+tests
